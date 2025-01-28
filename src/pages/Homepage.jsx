@@ -13,7 +13,6 @@ const Homepage = ({token}) => {
     <div>
       <h3>Halaman Dashboard, {token.user.user_metadata.full_name}</h3>
       <button onClick={handleLogout}>Logout</button>
-
     </div>
   )
 }
