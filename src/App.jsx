@@ -1,27 +1,35 @@
-import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import React, { useState, useEffect } from 'react';
+import { SignUp, Login, Homepage } from './pages';
+import {Routes, Route} from 'react-router-dom';
 
-const supabase = createClient("https://qpbbxtgxsvzajmfnryhg.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwYmJ4dGd4c3Z6YWptZm5yeWhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYyNjYwMDgsImV4cCI6MjA1MTg0MjAwOH0.euZzImoloGBnafAKGLG9F4rLvMkUJhXxriZjAnqtOLU");
+const App = () => {
 
-function App() {
-  const [countries, setCountries] = useState([]);
+ const [token, setToken] = useState(false)
 
-  useEffect(() => {
-    getCountries();
-  }, []);
-
-  async function getCountries() {
-    const { data } = await supabase.from("countries").select();
-    setCountries(data);
+  if(token){
+    sessionStorage.setItem('token',JSON.stringify(token))
   }
 
+  useEffect(() => {
+    if(sessionStorage.getItem('token')){
+      let data = JSON.parse(sessionStorage.getItem('token'))
+      setToken(data)
+    }
+    
+  }, [])
+  
   return (
-    <ul>
-      {countries.map((country) => (
-        <li key={country.name}>{country.name}</li>
-      ))}
-    </ul>
-  );
+    <div>
+      <Routes>
+        <Route path={'/signup'} element={ <SignUp />} />
+        <Route path={'/'} element={ <Login setToken={setToken}/>} />
+        {token?<Route path={'/homepage'} element={ <Homepage token={token} />} />:""}
+
+      </Routes>
+     
+      
+    </div>
+  )
 }
 
-export default App;
+export default App
